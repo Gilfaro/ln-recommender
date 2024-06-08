@@ -1,4 +1,8 @@
-# Install
+## Colab
+
+Open in [Colab](https://colab.research.google.com/github/Gilfaro/ln-recommender/blob/main/LNReadability.ipynb) and follow the instructions.
+
+## Install
 
 * Create a directory and unpack all the contents of the contents of the zip, ex. `recommender-cli`
 * Create python venv
@@ -26,7 +30,7 @@ pip install .
 ln-recommender -h
 ```
 
-# Example Usage
+## Example Usage
 
 * Train model and output model file
 

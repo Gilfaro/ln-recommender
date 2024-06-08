@@ -13,9 +13,7 @@ def flatten(t):
     return (
         [j for i in t for j in flatten(i)]
         if isinstance(t, (tuple, list))
-        else [t]
-        if isinstance(t, epub.Link)
-        else []
+        else [t] if isinstance(t, epub.Link) else []
     )
 
 
