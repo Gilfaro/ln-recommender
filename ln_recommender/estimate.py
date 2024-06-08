@@ -1,6 +1,8 @@
 from catboost import CatBoostClassifier, Pool
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.utils.class_weight import compute_class_weight
 from ln_recommender.files import CSV_HEADERS
 
 CSV_DATA_HEADERS = CSV_HEADERS[:-2]
@@ -17,7 +19,17 @@ def read_data(filename, eval=False, model_filename=None):
 
     x_data = df[CSV_DATA_HEADERS]
     y_data = df["Label"]
-    model = CatBoostClassifier(verbose=True, allow_writing_files=False)
+
+    classes = np.unique(y_data)
+    weights = compute_class_weight(class_weight="balanced", classes=classes, y=y_data)
+    class_weights = dict(zip(classes, weights))
+
+    model = CatBoostClassifier(
+        loss_function="MultiClassOneVsAll",
+        class_weights=class_weights,
+        verbose=True,
+        allow_writing_files=False,
+    )
     if eval:
         x, x_test, y, y_test = train_test_split(
             x_data, y_data, test_size=0.2, train_size=0.8
