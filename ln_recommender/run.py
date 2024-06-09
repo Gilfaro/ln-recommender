@@ -76,5 +76,5 @@ def print_stats(filename, stat, prediction):
     print(f"Avg Sentence Length: {stat.avg:.2f}")
     print(f"Median Sentence Length: {stat.median:.2f}")
     print(f"Mode Sentence Length: {stat.mode:.2f}")
-    print(f"Avg Verb Count: {stat.mode:.2f}")
-    print(f"Avg Auxiliary Verb Count: {stat.mode:.2f}")
+    print(f"Avg Verb Count: {stat.verb:.2f}")
+    print(f"Avg Auxiliary Verb Count: {stat.aux:.2f}")
