@@ -18,6 +18,11 @@ def get_freq(filename):
 
 
 def parse_text(path, filename, freq):
+    verb_string = "動詞"
+    aux_string = "助動詞"
+    verb = []
+    aux = []
+
     skip_tokens = ["補助記号", "空白", "数詞"]
     suda_freq = Counter({})
     suda_avg_line_length = 0
@@ -29,6 +34,8 @@ def parse_text(path, filename, freq):
         nonlocal suda_freq
         nonlocal suda_avg_line_length
         nonlocal text_line_length
+        nonlocal verb
+        nonlocal aux
 
         stripped_line = line.strip()
         if stripped_line == "":
@@ -64,6 +71,8 @@ def parse_text(path, filename, freq):
 
         count_tokens = 0
         count_dict = Counter({})
+        ca = 0
+        cv = 0
         for w in tokens:
             if any(x in skip_tokens for x in w.part_of_speech()):
                 continue
@@ -72,9 +81,15 @@ def parse_text(path, filename, freq):
             else:
                 count_dict[w.dictionary_form()] += 1
                 count_tokens += 1
+                if verb_string in w.part_of_speech():
+                    cv += 1
+                elif aux_string in w.part_of_speech():
+                    ca += 1
 
         if count_tokens > 0:
             text_line_length.append(count_tokens / sent)
+            verb.append(cv / sent)
+            aux.append(ca / sent)
         suda_freq = suda_freq + count_dict
 
     if os.path.splitext(filename)[1] == ".epub":
@@ -82,7 +97,7 @@ def parse_text(path, filename, freq):
         for p in epub.text():
             process(p.text())
     else:
-        with open(path, encoding="utf8") as fd:
+        with open(path, "r", encoding="utf8") as fd:
             for line in fd:
                 process(line)
 
@@ -96,6 +111,8 @@ def parse_text(path, filename, freq):
     suda_mode_line_length = m[0]
 
     dict_freq = calculate_freq(freq, suda_freq)
+    suda_verb = np.mean(verb)
+    suda_aux = np.mean(aux)
 
     return SimpleNamespace(
         filename=filename,
@@ -107,6 +124,8 @@ def parse_text(path, filename, freq):
         avg=suda_avg_line_length,
         median=suda_median_line_length,
         mode=suda_mode_line_length,
+        verb=suda_verb,
+        aux=suda_aux,
     )
 
 

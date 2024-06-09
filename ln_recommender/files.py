@@ -15,6 +15,8 @@ CSV_HEADERS = [
     "Avg Sentence Length",
     "Median Sentence Length",
     "Mode Sentence Length",
+    "Avg Verb Count",
+    "Avg Auxiliary Verb Count",
     "Label",
     "Comment",
 ]

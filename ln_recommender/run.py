@@ -1,7 +1,7 @@
 from ln_recommender.files import get_sources, save_csv
 from ln_recommender.cli import get_inputs
 from ln_recommender.parse import get_freq, parse_text
-from ln_recommender.estimate import read_data, load_model
+from ln_recommender.estimate import read_data, load_model, read_data_cluster
 import os
 
 
@@ -27,6 +27,8 @@ def execute_on_inputs():
                 out.avg,
                 out.median,
                 out.mode,
+                out.verb,
+                out.aux,
             ]
             pred = model.predict(pred_list)
             csv_data = pred_list
@@ -43,6 +45,11 @@ def execute_on_inputs():
     elif inputs.command == "train":
         model = read_data(inputs.training_data, inputs.eval_mode, inputs.model_save)
 
+    elif inputs.command == "cluster":
+        model = read_data_cluster(
+            inputs.training_data, inputs.min_cluster_size, inputs.min_samples
+        )
+
 
 def print_stats(filename, stat, prediction):
     print("")
@@ -57,6 +64,8 @@ def print_stats(filename, stat, prediction):
         f",{stat.avg:.2f}"
         f",{stat.median:.2f}"
         f",{stat.mode:.2f}"
+        f",{stat.verb:.2f}"
+        f",{stat.aux:.2f}"
     )
     print(f"Readability: {prediction}")
     print(f"Readability 70% frequency: {stat.p70:.0f}")
@@ -67,3 +76,5 @@ def print_stats(filename, stat, prediction):
     print(f"Avg Sentence Length: {stat.avg:.2f}")
     print(f"Median Sentence Length: {stat.median:.2f}")
     print(f"Mode Sentence Length: {stat.mode:.2f}")
+    print(f"Avg Verb Count: {stat.mode:.2f}")
+    print(f"Avg Auxiliary Verb Count: {stat.mode:.2f}")
