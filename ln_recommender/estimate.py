@@ -66,10 +66,12 @@ def read_data(filename, eval=False, model_filename=None):
         )
         train_pool = Pool(x, y)
         eval_pool = Pool(x_test, y_test)
-        f = model.fit(train_pool, eval_set=eval_pool, verbose=100)
+        f = model.fit(
+            train_pool, eval_set=eval_pool, early_stopping_rounds=100, verbose=100
+        )
     else:
         f = model.fit(x_data, y_data, verbose=100)
     if model_filename is not None:
         f.save_model(model_filename)
-    print(f.get_feature_importance())
+    print(f.get_feature_importance(prettified=True))
     return f
