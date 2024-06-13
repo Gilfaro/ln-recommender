@@ -11,7 +11,7 @@ def execute_on_inputs():
         sources = get_sources(inputs)
         freq = get_freq(inputs.freq)
         if inputs.model_load is not None:
-            model = load_model("model.cbm")
+            model = load_model(inputs.model_load)
         else:
             model = read_data(
                 inputs.training_data,
