@@ -76,6 +76,7 @@ def read_data(filename, iterations, eval=False, model_filename=None):
         f = model.fit(
             train_pool, eval_set=eval_pool, early_stopping_rounds=100, verbose=100
         )
+        print(f"Model accuracy on eval data: {f.score(eval_pool):.2%}")
     else:
         f = model.fit(x_data, y_data, verbose=100)
     if model_filename is not None:
