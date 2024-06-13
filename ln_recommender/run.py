@@ -13,7 +13,12 @@ def execute_on_inputs():
         if inputs.model_load is not None:
             model = load_model("model.cbm")
         else:
-            model = read_data(inputs.training_data, inputs.eval_mode, inputs.model_save)
+            model = read_data(
+                inputs.training_data,
+                inputs.iterations,
+                inputs.eval_mode,
+                inputs.model_save,
+            )
 
         data = []
         for path, filename in sources:
@@ -43,10 +48,12 @@ def execute_on_inputs():
             save_csv("out.csv", data)
 
     elif inputs.command == "train":
-        model = read_data(inputs.training_data, inputs.eval_mode, inputs.model_save)
+        read_data(
+            inputs.training_data, inputs.iterations, inputs.eval_mode, inputs.model_save
+        )
 
     elif inputs.command == "cluster":
-        model = read_data_cluster(
+        read_data_cluster(
             inputs.training_data, inputs.min_cluster_size, inputs.min_samples
         )
 

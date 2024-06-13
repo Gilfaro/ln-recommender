@@ -4,11 +4,11 @@ Open in [Colab](https://colab.research.google.com/github/Gilfaro/ln-recommender/
 
 ## Install
 
-* Create a directory and unpack all the contents of the contents of the zip, ex. `recommender-cli`
+* Create a directory and unpack all the contents of the contents of the zip, ex. `ln-recommender`
 * Create python venv
 
 ```
-cd recommender-cli
+cd ln-recommender
 python -m venv venv
 ```
 
@@ -60,4 +60,10 @@ ln-recommender eval -d directory -ml model.cbm
 
 ```
 ln-recommender eval -d directory -ml model.cbm -o out.csv
+```
+
+* Run clustering with minimum group size 3 and core samples 2
+
+```
+ln-recommender cluster -td data.csv -mcs 3 -ms 2
 ```

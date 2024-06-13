@@ -6,6 +6,8 @@ from sklearn.utils.class_weight import compute_class_weight
 from ln_recommender.files import CSV_HEADERS
 from sklearn.cluster import HDBSCAN
 from tabulate import tabulate
+from scipy.stats import zscore
+from sklearn.decomposition import PCA
 
 CSV_DATA_HEADERS = CSV_HEADERS[:-2]
 
@@ -22,9 +24,13 @@ def read_data_cluster(filename, min_cluster_size, min_samples):
     x_data = df[CSV_DATA_HEADERS]
     y_data = df["Label"]
 
+    scaled_x_data = x_data.apply(zscore)
+
+    pca_data = PCA(n_components=2).fit_transform(scaled_x_data)
+
     clustering = HDBSCAN(
         min_cluster_size=min_cluster_size, min_samples=min_samples
-    ).fit(x_data)
+    ).fit(scaled_x_data)
 
     print(
         """
@@ -44,7 +50,7 @@ An array of cluster labels, one per datapoint. Outliers are labeled as follows:
     print(tabulate(print_data, showindex=False, headers=["Name", "Label", "Cluster"]))
 
 
-def read_data(filename, eval=False, model_filename=None):
+def read_data(filename, iterations, eval=False, model_filename=None):
     df = pd.read_csv(filename, sep=",", quotechar="'", index_col=False)
 
     x_data = df[CSV_DATA_HEADERS]
@@ -57,6 +63,7 @@ def read_data(filename, eval=False, model_filename=None):
     model = CatBoostClassifier(
         loss_function="MultiClassOneVsAll",
         class_weights=class_weights,
+        iterations=iterations,
         verbose=True,
         allow_writing_files=False,
     )

@@ -75,6 +75,13 @@ def setup_advanced_cli(parser):
         help="Path to the training data file",
     )
     main_group.add_argument(
+        "-it",
+        "--iterations",
+        default=10000,
+        required=False,
+        help="Number of iterations to train for",
+    )
+    main_group.add_argument(
         "-ev",
         "--eval-mode",
         default=False,
@@ -101,6 +108,13 @@ def setup_advanced_cli(parser):
         default="data.csv",
         required=False,
         help="Path to the training data file",
+    )
+    gen_main_group.add_argument(
+        "-it",
+        "--iterations",
+        default=10000,
+        required=False,
+        help="Number of iterations to train for",
     )
     gen_main_group.add_argument(
         "-ev",
@@ -157,6 +171,7 @@ def get_inputs():
             dirs=args.dirs,
             text=args.text,
             freq=args.freq,
+            iterations=args.iterations,
             eval_mode=args.eval_mode,
             training_data=args.training_data,
             model_load=args.model_load,
@@ -166,6 +181,7 @@ def get_inputs():
     elif args.command == "train":
         inputs = SimpleNamespace(
             command=args.command,
+            iterations=args.iterations,
             eval_mode=args.eval_mode,
             training_data=args.training_data,
             model_save=args.model_save,
