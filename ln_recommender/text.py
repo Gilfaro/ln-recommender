@@ -8,6 +8,8 @@ import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 from ebooklib import epub
 
+TEXT_TAGS = ["p", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"]
+
 
 def flatten(t):
     return (
@@ -37,9 +39,7 @@ class EpubChapter:
     idx: int
 
     def text(self):
-        paragraphs = self.content.find("body").find_all(
-            ["p", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"]
-        )
+        paragraphs = self.content.find("body").find_all(TEXT_TAGS)
         r = []
         for p in paragraphs:
             if "id" in p.attrs:
@@ -90,9 +90,7 @@ class Epub:
 
             content = BeautifulSoup(item.get_content(), "html.parser")
 
-            r = content.find("body").find_all(
-                ["p", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"]
-            )
+            r = content.find("body").find_all(TEXT_TAGS)
             # Most of the time chapter names are on images
             idx = 0
             while idx < len(r) and not r[idx].get_text().strip():

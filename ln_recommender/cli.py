@@ -78,6 +78,7 @@ def setup_advanced_cli(parser):
         "-it",
         "--iterations",
         default=10000,
+        type=int,
         required=False,
         help="Number of iterations to train for",
     )
@@ -113,6 +114,7 @@ def setup_advanced_cli(parser):
         "-it",
         "--iterations",
         default=10000,
+        type=int,
         required=False,
         help="Number of iterations to train for",
     )

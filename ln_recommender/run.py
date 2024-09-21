@@ -45,7 +45,7 @@ def execute_on_inputs():
             print_stats(filename, out, pred[0])
 
         if inputs.output_csv is not None:
-            save_csv("out.csv", data)
+            save_csv(inputs.output_csv, data)
 
     elif inputs.command == "train":
         read_data(
