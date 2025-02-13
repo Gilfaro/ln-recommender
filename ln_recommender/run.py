@@ -3,6 +3,7 @@ from ln_recommender.cli import get_inputs
 from ln_recommender.parse import get_freq, parse_text
 from ln_recommender.estimate import read_data, load_model, read_data_cluster
 import os
+import traceback
 
 
 def execute_on_inputs():
@@ -22,27 +23,31 @@ def execute_on_inputs():
 
         data = []
         for path, filename in sources:
-            out = parse_text(os.path.join(path, filename), filename, freq)
-            pred_list = [
-                out.p70,
-                out.p80,
-                out.p90,
-                out.p95,
-                out.p99,
-                out.avg,
-                out.median,
-                out.mode,
-                out.verb,
-                out.aux,
-            ]
-            pred = model.predict(pred_list)
-            csv_data = pred_list
-            csv_data.append(pred[0])
-            csv_data.append(filename)
+            try:
+                out = parse_text(os.path.join(path, filename), filename, freq)
+                pred_list = [
+                    out.p70,
+                    out.p80,
+                    out.p90,
+                    out.p95,
+                    out.p99,
+                    out.avg,
+                    out.median,
+                    out.mode,
+                    out.verb,
+                    out.aux,
+                ]
+                pred = model.predict(pred_list)
+                csv_data = pred_list
+                csv_data.append(pred[0])
+                csv_data.append(filename)
 
-            if inputs.output_csv is not None:
-                data.append(csv_data)
-            print_stats(filename, out, pred[0])
+                if inputs.output_csv is not None:
+                    data.append(csv_data)
+                print_stats(filename, out, pred[0])
+            except Exception as e:
+                print("Error parsing %s" % os.path.join(path, filename))
+                traceback.print_exc()
 
         if inputs.output_csv is not None:
             save_csv(inputs.output_csv, data)
