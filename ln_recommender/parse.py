@@ -1,10 +1,12 @@
-from sudachipy import Dictionary, SplitMode
+import os
 from collections import Counter
+from types import SimpleNamespace
+
 import numpy as np
 from scipy import stats
-from types import SimpleNamespace
+from sudachipy import SplitMode
+
 from ln_recommender.text import Epub
-import os
 
 
 def get_freq(filename):
@@ -17,7 +19,7 @@ def get_freq(filename):
     return freq_dict
 
 
-def parse_text(path, filename, freq):
+def parse_text(path, filename, freq, tokenizer_obj):
     verb_string = "動詞"
     aux_string = "助動詞"
     verb = []
@@ -27,8 +29,6 @@ def parse_text(path, filename, freq):
     suda_freq = Counter({})
     suda_avg_line_length = 0
     text_line_length = []
-    dictionary = Dictionary(dict="full")
-    tokenizer_obj = dictionary.create()
 
     def process(line):
         nonlocal suda_freq
@@ -100,8 +100,6 @@ def parse_text(path, filename, freq):
         with open(path, "r", encoding="utf8") as fd:
             for line in fd:
                 process(line)
-
-    dictionary.close()
 
     text_line_length = np.array(text_line_length)
     suda_avg_line_length = np.mean(text_line_length)

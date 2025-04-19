@@ -1,13 +1,14 @@
-from catboost import CatBoostClassifier, Pool
-import pandas as pd
 import numpy as np
+import pandas as pd
+from catboost import CatBoostClassifier, Pool
+from scipy.stats import zscore
+from sklearn.cluster import HDBSCAN
+from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.utils.class_weight import compute_class_weight
-from ln_recommender.files import CSV_HEADERS
-from sklearn.cluster import HDBSCAN
 from tabulate import tabulate
-from scipy.stats import zscore
-from sklearn.decomposition import PCA
+
+from ln_recommender.files import CSV_HEADERS
 
 CSV_DATA_HEADERS = CSV_HEADERS[:-2]
 

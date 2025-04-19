@@ -1,5 +1,6 @@
-import os
 import fnmatch
+import os
+
 import pandas as pd
 
 TEXT_FORMATS = ["epub", "txt"]

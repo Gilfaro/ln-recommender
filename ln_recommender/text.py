@@ -1,12 +1,14 @@
-from pathlib import Path
-from bs4 import element
-from bs4 import BeautifulSoup
-from dataclasses import dataclass
 import urllib
 import warnings
+from dataclasses import dataclass
+from pathlib import Path
 
-warnings.simplefilter(action="ignore", category=FutureWarning)
+from bs4 import BeautifulSoup, element
 from ebooklib import epub
+
+# Suppress specific warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="ebooklib.epub")
+warnings.filterwarnings("ignore", category=FutureWarning, module="ebooklib.epub")
 
 TEXT_TAGS = ["p", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"]
 

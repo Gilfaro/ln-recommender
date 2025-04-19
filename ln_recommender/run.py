@@ -1,9 +1,12 @@
-from ln_recommender.files import get_sources, save_csv
-from ln_recommender.cli import get_inputs
-from ln_recommender.parse import get_freq, parse_text
-from ln_recommender.estimate import read_data, load_model, read_data_cluster
 import os
 import traceback
+
+from sudachipy import Dictionary
+
+from ln_recommender.cli import get_inputs
+from ln_recommender.estimate import load_model, read_data, read_data_cluster
+from ln_recommender.files import get_sources, save_csv
+from ln_recommender.parse import get_freq, parse_text
 
 
 def execute_on_inputs():
@@ -21,10 +24,14 @@ def execute_on_inputs():
                 inputs.model_save,
             )
 
+        dictionary = Dictionary(dict="full")
+        tokenizer_obj = dictionary.create()
         data = []
         for path, filename in sources:
             try:
-                out = parse_text(os.path.join(path, filename), filename, freq)
+                out = parse_text(
+                    os.path.join(path, filename), filename, freq, tokenizer_obj
+                )
                 pred_list = [
                     out.p70,
                     out.p80,
@@ -48,6 +55,8 @@ def execute_on_inputs():
             except Exception as e:
                 print("Error parsing %s" % os.path.join(path, filename))
                 traceback.print_exc()
+
+        dictionary.close()
 
         if inputs.output_csv is not None:
             save_csv(inputs.output_csv, data)
