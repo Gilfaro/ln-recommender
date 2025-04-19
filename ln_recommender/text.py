@@ -16,7 +16,7 @@ TEXT_TAGS = ["p", "li", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"]
 def flatten(t):
     return (
         [j for i in t for j in flatten(i)]
-        if isinstance(t, (tuple, list))
+        if isinstance(t, tuple | list)
         else [t]
         if isinstance(t, epub.Link)
         else []

@@ -1,12 +1,12 @@
 import numpy as np
 import pandas as pd
 from catboost import CatBoostClassifier, Pool
+from rich.console import Console
+from rich.table import Table
 from scipy.stats import zscore
 from sklearn.cluster import HDBSCAN
-from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.utils.class_weight import compute_class_weight
-from tabulate import tabulate
 
 from ln_recommender.files import CSV_HEADERS
 
@@ -27,7 +27,7 @@ def read_data_cluster(filename, min_cluster_size, min_samples):
 
     scaled_x_data = x_data.apply(zscore)
 
-    pca_data = PCA(n_components=2).fit_transform(scaled_x_data)
+    # pca_data = PCA(n_components=2).fit_transform(scaled_x_data)
 
     clustering = HDBSCAN(
         min_cluster_size=min_cluster_size, min_samples=min_samples
@@ -41,14 +41,17 @@ An array of cluster labels, one per datapoint. Outliers are labeled as follows:
   Samples with missing data are given the label -3, even if they also have infinite elements.
           """
     )
-    print_data = list(zip(df["Comment"], y_data, clustering.labels_))
+    print_data = list(zip(df["Comment"], y_data, clustering.labels_, strict=False))
 
     def sort_cluster(d):
         return d[2]
 
     print_data.sort(key=sort_cluster)
 
-    print(tabulate(print_data, showindex=False, headers=["Name", "Label", "Cluster"]))
+    table = Table("Name", "Label", "Cluster")
+    for row in print_data:
+        table.add_row(*tuple(map(str, row)))
+    Console().print(table)
 
 
 def read_data(filename, iterations, eval=False, model_filename=None):
@@ -59,7 +62,7 @@ def read_data(filename, iterations, eval=False, model_filename=None):
 
     classes = np.unique(y_data)
     weights = compute_class_weight(class_weight="balanced", classes=classes, y=y_data)
-    class_weights = dict(zip(classes, weights))
+    class_weights = dict(zip(classes, weights, strict=False))
 
     model = CatBoostClassifier(
         loss_function="MultiClassOneVsAll",

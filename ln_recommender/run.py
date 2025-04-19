@@ -52,8 +52,8 @@ def execute_on_inputs():
                 if inputs.output_csv is not None:
                     data.append(csv_data)
                 print_stats(filename, out, pred[0])
-            except Exception as e:
-                print("Error parsing %s" % os.path.join(path, filename))
+            except Exception:
+                print(f"Error parsing {os.path.join(path, filename)}")
                 traceback.print_exc()
 
         dictionary.close()

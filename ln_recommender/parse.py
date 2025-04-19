@@ -97,7 +97,7 @@ def parse_text(path, filename, freq, tokenizer_obj):
         for p in epub.text():
             process(p.text())
     else:
-        with open(path, "r", encoding="utf8") as fd:
+        with open(path, encoding="utf8") as fd:
             for line in fd:
                 process(line)
 
@@ -132,7 +132,7 @@ def calculate_freq(freq_dict, suda_freq):
     for w, c in suda_freq.most_common():
         fq = freq_dict.get(w)
         if fq is not None:
-            for i in range(c):
+            for _i in range(c):
                 dict_freq.append(fq)
 
     return np.array(dict_freq)
